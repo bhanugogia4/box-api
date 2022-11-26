@@ -13,17 +13,15 @@ app.get("/token", async (req, res) => {
     box_subject_type: "enterprise",
     box_subject_id: process.env.BOX_SUBJECT_ID,
   };
-  console.log(process.env.CLIENT_ID);
 
   const options = {
     method: "POST",
     body: JSON.stringify(body),
-    headers: { "Content-Type": "application/json" },
+    headers: { Accept: "*/*" },
   };
-  console.log(options);
-  const response = await fetch("https://api.box.com/oauth/token", options);
-  console.log(response);
-  //   res.send(response.json());
+  const response = await fetch("https://api.box.com/oauth2/token", options);
+  const data = await response.json();
+  res.send(data);
 });
 
 app.listen(8080, () => {
