@@ -121,8 +121,8 @@ app.get("/folder:folder_id", async (req, res) => {
 
 // Download File
 
-app.get("/file:file_id", async (req, res) => {
-  //if (!req.query.file_id) res.status(400).send("file_id missing");
+app.get("/file", async (req, res) => {
+  if (!req.query.file_id) res.status(400).send("file_id missing");
 
   const file_id = req.query.file_id;
   const { rows } = await pool.query("SELECT * FROM BOX"); // ERROR HANDLING NEEDED
@@ -138,7 +138,7 @@ app.get("/file:file_id", async (req, res) => {
     `https://api.box.com/2.0/files/${file_id}/content`,
     options
   );
-  console.log(await typeof response);
+  res.redirect(await response.url);
 });
 
 app.listen(8080, () => {
