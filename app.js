@@ -1,6 +1,5 @@
 require("dotenv").config();
 const express = require("express");
-const BoxSDK = require("box-node-sdk");
 const fetch = require("node-fetch");
 const Pool = require("pg").Pool;
 
@@ -15,6 +14,8 @@ const pool = new Pool({
 });
 
 console.log("Connected to Database!");
+
+// Get Access Token
 
 app.get("/token", async (req, res) => {
   const body = {
@@ -40,6 +41,32 @@ app.get("/token", async (req, res) => {
     }
   );
   res.send(data);
+});
+
+// Get Folder Names
+
+app.get("/folder", async (req, res) => {
+  const { rows } = await pool.query("SELECT * FROM BOX"); // ERROR HANDLING NEEDED
+
+  const access_token = rows[0].accesstoken;
+
+  const options = {
+    method: "GET",
+    headers: { Authorization: `Bearer ${access_token}` },
+  };
+
+  const response = await fetch(
+    "https://api.box.com/2.0/folders/0/items",
+    options
+  );
+
+  const data = await response.json();
+
+  let folders = [];
+  data.entries.forEach((element) => {
+    folders.push(element.name);
+  });
+  res.send(Object.assign({}, folders));
 });
 
 app.listen(8080, () => {
