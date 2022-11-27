@@ -1,9 +1,10 @@
 require("dotenv").config();
 const express = require("express");
 const fetch = require("node-fetch");
-//const BoxSDK = require("box-node-sdk");
+const BoxSDK = require("box-node-sdk");
 const Pool = require("pg").Pool;
-//const fs = require("fs");
+const fs = require("fs");
+const morgan = require("morgan");
 
 const app = express();
 
@@ -17,19 +18,20 @@ const pool = new Pool({
 
 console.log("Connected to Database!");
 
-/*
------------------------UPLOAD FILE------------------
+/*-----------------------UPLOAD FILE------------------
 
-const stream = fs.createReadStream("nicepage.js");
-const folderID = "";
-const client = BoxSDK.getBasicClient("ACCESS_TOKEN");
+const stream = fs.createReadStream("file.rtf");
+const folderID = "183745918701";
+const client = BoxSDK.getBasicClient("CPI0zdj5N59Q4X2lfXv4312Uda9fYass");
 console.log(client);
 client.files
-  .uploadFile(folderID, "nicepage.js", stream)
+  .uploadFile(folderID, "file.rtf", stream)
   .then(() => console.log("Uploaded"))
   .catch(() => {
     console.log("Failed");
   });*/
+
+app.use(morgan("tiny"));
 
 // Get Access Token
 
@@ -56,7 +58,7 @@ app.get("/token", async (req, res) => {
       if (err) res.status(500).send(err);
     }
   );
-  res.status(200);
+  res.status(200).send("Token Generated");
 });
 
 // Get Folder Names
@@ -94,8 +96,6 @@ app.get("/folder", async (req, res) => {
 
 // Get Folder Items
 app.get("/folder:folder_id", async (req, res) => {
-  //req.query;
-  console.log(req.query);
   const { rows } = await pool.query("SELECT * FROM BOX"); // ERROR HANDLING NEEDED
 
   const access_token = rows[0].accesstoken;
@@ -117,6 +117,28 @@ app.get("/folder:folder_id", async (req, res) => {
     folders.push(element.name);
   });
   res.send(Object.assign({}, folders));
+});
+
+// Download File
+
+app.get("/file:file_id", async (req, res) => {
+  //if (!req.query.file_id) res.status(400).send("file_id missing");
+
+  const file_id = req.query.file_id;
+  const { rows } = await pool.query("SELECT * FROM BOX"); // ERROR HANDLING NEEDED
+
+  const access_token = rows[0].accesstoken;
+
+  const options = {
+    method: "GET",
+    headers: { Authorization: `Bearer ${access_token}` },
+  };
+
+  const response = await fetch(
+    `https://api.box.com/2.0/files/${file_id}/content`,
+    options
+  );
+  console.log(await typeof response);
 });
 
 app.listen(8080, () => {

@@ -10,8 +10,11 @@
   "author": "Bhanu Gogia",
   "license": "ISC",
   "dependencies": {
+    "box-node-sdk": "^2.7.2",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "fs": "^0.0.1-security",
+    "morgan": "^1.10.0",
     "node-fetch": "2.0",
     "pg": "^8.8.0"
   }
