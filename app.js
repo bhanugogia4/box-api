@@ -86,7 +86,6 @@ app.get("/folder", async (req, res) => {
 
   let allItems = [];
   data.entries.forEach((element) => {
-    //folders.push(element.name);
     let item = {};
     item.id = element.id;
     item.name = element.name;

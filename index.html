@@ -2,48 +2,12 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <title>BOX API</title>
+    <link rel="stylesheet" type="text/css" href="styles.css" />
   </head>
   <body>
-    <script>
-      async function fetchDataAndRenderTable() {
-        const serverURL = "http://localhost:8080/folder";
-        const dataFromTheServer = await fetch(serverURL).then((res) =>
-          res.json()
-        );
-        const tableHTMLElement = document.createElement("table");
-        tableHTMLElement.setAttribute("id", "myTable");
-        const arr = Object.values(dataFromTheServer);
-
-        tableHTMLElement.innerHTML = `
-          <table>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Id</th>
-            </tr>
-            
-        </table>`;
-
-        arr.forEach((element) => {
-          const newRow = tableHTMLElement.insertRow();
-
-          let newCell = newRow.insertCell();
-          let newText = document.createTextNode(element.name);
-          newCell.appendChild(newText);
-
-          newCell = newRow.insertCell();
-          newText = document.createTextNode(element.type);
-          newCell.appendChild(newText);
-
-          newCell = newRow.insertCell();
-          newText = document.createTextNode(element.id);
-          newCell.appendChild(newText);
-        });
-
-        document.body.appendChild(tableHTMLElement);
-      }
-
-      fetchDataAndRenderTable();
+    <h1>BOX API</h1>
+    <script src="index.js"></script>
     </script>
   </body>
 </html>
