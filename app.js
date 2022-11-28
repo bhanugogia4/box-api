@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const cors = require("cors");
 const fetch = require("node-fetch");
 const BoxSDK = require("box-node-sdk");
 const Pool = require("pg").Pool;
@@ -31,6 +32,7 @@ client.files
     console.log("Failed");
   });*/
 
+app.use(cors());
 app.use(morgan("tiny"));
 
 // Get Access Token
