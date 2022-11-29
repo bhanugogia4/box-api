@@ -1,8 +1,6 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const BoxSDK = require("box-node-sdk");
-const fs = require("fs");
 const morgan = require("morgan");
 const authRouter = require("./routes/authRoute");
 const folderRouter = require("./routes/folderRoute");
